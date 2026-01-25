@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: m2x
+Version: 0.1.0
+Author-email: Ricardo <13838152117@139.com>
+Requires-Python: >=3.10.19
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: markdown2>=2.5.4
+Requires-Dist: weasyprint>=68.0
+Dynamic: license-file
+
+# M2x
+A lightweight, free Markdown converter that supports fast file processing via terminal and visual editing with one-click conversion to PDF and Word through a web interface.

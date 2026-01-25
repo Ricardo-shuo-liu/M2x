@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0","wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name="m2x"
+
+version="0.1.0"
+
+authors=[{name="Ricardo",email="13838152117@139.com"}]
+
+readme="README.md"
+
+requires-python=">=3.10.19"
+
+dependencies=[
+    "markdown2>=2.5.4",
+    "weasyprint>=68.0", 
+]
