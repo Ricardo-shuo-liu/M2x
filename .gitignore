@@ -1,2 +1,10 @@
+#test生成物
 test.md
 test.pdf
+# 忽略Python字节码缓存目录（前后是双下划线，必须加/表示目录）
+__pycache__/
+# 忽略所有.egg-info/.egg.info构建目录（适配不同命名）
+*.egg-info/
+*.egg.info/
+# 额外忽略编译后的.pyc文件
+*.pyc
