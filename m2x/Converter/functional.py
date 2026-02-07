@@ -1,5 +1,9 @@
 from markdown2 import Markdown
 from weasyprint import HTML
+from docx import Document
+from docx.shared import Inches
+import os
+
 
 class converter():
     def __init__(self):
@@ -24,19 +28,29 @@ class converter():
             content = fp.read()
         return content
     def _save_html(self,
+                   save_path,
                    html_content):
         """
         将html内容存储到指定文件里面     
         """
-        save_path = "test.html"
         with open(save_path,'w') as fr:
             fr.write(html_content)
-    def _md_PDF(self,
+    def _md_to_PDF(self,
                 MdPath:str,
                 savePath:str):
+        """
+        将md内容转化成为PDF
+        """
         htmlContent = self._md_to_html(MdPath)
         HTML(string=htmlContent).write_pdf(savePath)
-    def _md_WORD(self,
-                   htmlPath:str,
+    def _md_to_WORD(self,
+                   MdPath:str,
                    savePath:str):
-        pass
+        """
+        将md内容转化为word
+        """
+        htmlContent = self._md_to_html(MdPath)
+        doc = Document()# 创建转化对象
+        doc.add_paragraph(htmlContent)
+        doc.save(savePath)
+        

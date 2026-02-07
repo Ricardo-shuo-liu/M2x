@@ -1,6 +1,8 @@
 #test生成物
 test.md
 test.pdf
+test.docx
+test.html
 # 忽略Python字节码缓存目录（前后是双下划线，必须加/表示目录）
 __pycache__/
 *.pyc
@@ -9,3 +11,5 @@ __pycache__/
 *.egg.info/
 # 额外忽略编译后的.pyc文件
 *.pyc
+m2x/Converter/__pycache__/__init__.cpython-310.pyc
+m2x/Converter/__pycache__/functional.cpython-310.pyc
