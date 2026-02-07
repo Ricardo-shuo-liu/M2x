@@ -18,3 +18,6 @@ dependencies=[
     "markdown2>=2.5.4",
     "weasyprint>=68.0", 
 ]
+
+[project.scripts]
+m2x = "m2x.clip:main"
