@@ -2,12 +2,9 @@ from markdown2 import Markdown
 from weasyprint import HTML
 from docx import Document
 from docx.shared import Inches
-import os
 
 
 class converter():
-    def __init__(self):
-        pass
     def _md_to_html(self,
                     MdPath:str=None)->str:
         """
