@@ -38,16 +38,29 @@ def main():
         if path.suffix.lower() not in ['.md', '.markdown']:
             raise ValueError(f"Not a valid Markdown file: {md_path}")
         return path
+    def validate_target_path(target_path: str,
+                            target_type:str) -> Path:
+        mapping_dict = {"word":[".docx","doc"],"pdf":[".pdf"]}
+        """校验target文件路径是否存在且为.md文件"""
+        path = Path(target_path).resolve()
+        if path.suffix.lower() not in mapping_dict[target_type]:
+            raise ValueError(f"Not a valid target file: {target_path}")
+        if path.exists():
+            raise ValueError(f"Target file is solved: {target_path}")
+       
+        return path
     try:
         converters = converter()
         if args.pdf:
             md_path = validate_path(args.pdf[0])
             save_path = Path(args.pdf[1]).resolve()
+            validate_target_path(save_path,target_type="pdf")
             converters._md_to_PDF(MdPath=str(md_path), savePath=str(save_path))  # 建议用小写方法名符合PEP8
             print(f"Successfully converted MD to PDF: {save_path}")
         elif args.word:
             md_path = validate_path(args.word[0])
             save_path = Path(args.word[1]).resolve()
+            validate_target_path(save_path,target_type="word")
             converters._md_to_WORD(MdPath=str(md_path), savePath=str(save_path))
             print(f"Successfully converted MD to Word: {save_path}")
     except FileNotFoundError as e:
