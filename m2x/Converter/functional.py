@@ -1,21 +1,56 @@
-from markdown2 import Markdown
+import markdown
 from weasyprint import HTML
 from docx import Document
 from docx.shared import Inches
-
+import os
+from m2x import get_exec_file_dir
 
 class converter():
+    
+
+    def escape_html_code(self,html_content):
+        import re
+        content_unescaped = (
+            html_content.replace("&amp;", "&")
+            .replace("&lt;", "<")
+            .replace("&gt;", ">")
+            .replace("&quot;", '"')
+            .replace("&#39;", "'")
+        )
+        code_pattern = re.compile(
+            r'(<pre\s*[^>]*>\s*<code\s*[^>]*>)(.*?)(</code\s*>\s*</pre\s*>)',
+            re.DOTALL | re.IGNORECASE
+        )
+
+        def replace_func(match):
+            prefix = match.group(1)
+            code = match.group(2)
+            suffix = match.group(3)
+            code_escaped = (
+                code.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+            )
+            return f"{prefix}{code_escaped}{suffix}"
+        final_html = code_pattern.sub(replace_func, content_unescaped)
+        dir_path  = get_exec_file_dir(__file__)
+        extension_path = os.path.join(dir_path,"extension.html")
+
+        with open(extension_path,'r',encoding='utf-8') as fp:
+            extension = fp.read()
+
+        return extension + final_html
     def _md_to_html(self,
                     MdPath:str=None)->str:
         """
         将md转化为html格式
         """
         MdContent = self._get_content(MdPath)
-        markdowner = Markdown()
-        html_content = markdowner.convert(MdContent)
 
-        return html_content
-        # self._save_html(html_content)
+        html_content = markdown.markdown(MdContent,extensions=['tables', 'fenced_code','toc','admonition','footnotes','nl2br','smarty'])
+
+        
+        return self.escape_html_code(html_content)
     def _get_content(self,
                      MdPath:str)->str:
         """

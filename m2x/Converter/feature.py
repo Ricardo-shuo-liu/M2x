@@ -1,13 +1,8 @@
 from bs4 import BeautifulSoup
 
-class decoder():
-    def __init__(self):
-        
+class transform():
+    def encode(self,htmlcontent):
         pass
 
-
-class encoder():
-    def __init__(self):
+    def decoder(self):
         pass
-
-    
