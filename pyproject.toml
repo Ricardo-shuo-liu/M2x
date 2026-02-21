@@ -21,3 +21,6 @@ dependencies=[
 
 [project.scripts]
 m2x = "m2x.clip:main"
+
+[tool.setuptools]
+packages = ["m2x"]
