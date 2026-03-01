@@ -45,8 +45,6 @@ def main():
         path = Path(target_path).resolve()
         if path.suffix.lower() not in mapping_dict[target_type]:
             raise ValueError(f"Not a valid target file: {target_path}")
-        if path.exists():
-            raise ValueError(f"Target file is solved: {target_path}")
        
         return path
     try:
