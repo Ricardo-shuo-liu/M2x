@@ -19,6 +19,9 @@ dependencies=[
     "weasyprint>=68.0", 
 ]
 
+[project.optional-dependencies]
+dev = ["pytest>= 9.0.2 "]
+
 [project.scripts]
 m2x = "m2x.clip:main"
 
