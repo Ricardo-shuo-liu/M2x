@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI Test Frontend | Inspired by yannesidibe.com</title>
+    <!-- 引入外部CSS（分离式） -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- 网站图标 -->
+    <link rel="icon" href="/static/img/favicon.ico" type="image/x-icon">
+    <!-- 引入Font Awesome（可选，用于图标） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">FastAPI Test</div>
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#api">API Test</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="container main-content">
+        <!-- 首页区域 -->
+        <section id="home" class="section">
+            <h1>FastAPI Test Frontend</h1>
+            <p>Inspired by <a href="https://www.yannesidibe.com/" target="_blank">yannesidibe.com</a></p>
+            <div class="cta-button">
+                <button id="test-api-btn">Test FastAPI Endpoint</button>
+            </div>
+        </section>
+
+        <!-- API测试区域 -->
+        <section id="api" class="section">
+            <h2>API Test Interface</h2>
+            <div class="api-test-container">
+                <div class="input-section">
+                    <label for="api-endpoint">API Endpoint:</label>
+                    <input type="text" id="api-endpoint" value="/api/hello" placeholder="e.g. /api/hello">
+                    
+                    <label for="request-method">Request Method:</label>
+                    <select id="request-method">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                    
+                    <label for="request-body">Request Body (JSON):</label>
+                    <textarea id="request-body" placeholder='{"name": "Test"}'></textarea>
+                    
+                    <button id="send-request-btn">Send Request</button>
+                </div>
+
+                <div class="response-section">
+                    <label>Response:</label>
+                    <pre id="response-output"></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于区域 -->
+        <section id="about" class="section">
+            <h2>About This Frontend</h2>
+            <p>Designed for testing FastAPI backend endpoints with a clean, minimal interface.</p>
+            <p>Files are separated into HTML, CSS, and JS for maintainability.</p>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 FastAPI Test Frontend | Inspired by yannesidibe.com</p>
+        </div>
+    </footer>
+
+    <!-- 引入外部JS（分离式） -->
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

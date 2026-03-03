@@ -1,6 +1,4 @@
 import os
-
-
 def get_exec_file_dir(file):
         exec_file_path = os.path.abspath(file)
 
