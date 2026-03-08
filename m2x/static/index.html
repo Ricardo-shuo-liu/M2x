@@ -1,85 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FastAPI Test Frontend | Inspired by yannesidibe.com</title>
-    <!-- 引入外部CSS（分离式） -->
-    <link rel="stylesheet" href="/static/css/style.css">
-    <!-- 网站图标 -->
-    <link rel="icon" href="/static/img/favicon.ico" type="image/x-icon">
-    <!-- 引入Font Awesome（可选，用于图标） -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M2x Editor | 黑色系 MD 编辑器</title>
+  <!-- 第三方依赖 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.41.0/min/vs/loader.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 本地样式（路径必须正确：/static/css/） -->
+  <link rel="stylesheet" href="/static/css/style.css">
 </head>
-<body>
-    <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="logo">FastAPI Test</div>
-            <ul class="nav-links">
-                <li><a href="#home" class="active">Home</a></li>
-                <li><a href="#api">API Test</a></li>
-                <li><a href="#about">About</a></li>
-            </ul>
+<!-- 纯黑色系主体 -->
+<body class="bg-black text-white h-screen flex flex-col m-0 p-0 overflow-hidden">
+  <!-- 顶部导航栏（深灰+青绿色 accent） -->
+  <header class="bg-[#121212] px-6 py-3 shadow-md flex items-center justify-between border-b border-[#222]">
+    <div class="flex items-center gap-2">
+      <i class="fa fa-file-alt text-[#00ff9d] text-xl"></i>
+      <h1 class="text-xl font-bold text-[#00ff9d]">M2x Editor</h1>
+      <span id="fileName" class="text-[#888] text-sm">未命名.md</span>
+    </div>
+    <div class="flex gap-3">
+      <button id="saveBtn" class="px-3 py-1.5 bg-[#1e1e1e] rounded hover:bg-[#282828] transition">
+        <i class="fa fa-save mr-1"></i>保存
+      </button>
+      <button id="exportBtn" class="px-3 py-1.5 bg-[#00ff9d] text-black rounded hover:bg-[#00e08b] transition">
+        <i class="fa fa-download mr-1"></i>导出
+      </button>
+      <select id="outputFormat" class="bg-[#1e1e1e] rounded px-2 py-1.5 text-sm border border-[#333]">
+        <option value="html">HTML</option>
+        <option value="pdf">PDF</option>
+        <option value="docx">Word</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- 核心编辑区域（纯黑+深灰） -->
+  <main class="flex-1 flex flex-col md:flex-row gap-4 p-4 overflow-hidden">
+    <!-- 左侧编辑区（纯黑背景） -->
+    <div class="w-full md:w-1/2 h-full flex flex-col bg-[#0a0a0a] rounded-lg shadow-md overflow-hidden border border-[#222]">
+      <div class="px-4 py-2 border-b border-[#222] flex items-center bg-[#0f0f0f]">
+        <i class="fa fa-edit text-[#888] mr-2"></i>
+        <span>编辑区</span>
+        <button id="formatBtn" class="ml-auto text-xs bg-[#1e1e1e] px-2 py-1 rounded hover:bg-[#282828]">格式化</button>
+      </div>
+      <!-- 编辑器容器（必须有 id=editorContainer） -->
+      <div id="editorContainer" class="flex-1 w-full h-full"></div>
+    </div>
+
+    <!-- 右侧预览区（深灰背景） -->
+    <div class="w-full md:w-1/2 h-full flex flex-col bg-[#0a0a0a] rounded-lg shadow-md overflow-hidden border border-[#222]">
+      <div class="px-4 py-2 border-b border-[#222] flex items-center bg-[#0f0f0f]">
+        <i class="fa fa-eye text-[#888] mr-2"></i>
+        <span class="text-[#ddd]">预览区</span>
+        <button id="refreshPreviewBtn" class="ml-auto text-xs bg-[#1e1e1e] px-2 py-1 rounded hover:bg-[#282828]">
+          刷新
+        </button>
+      </div>
+      <div id="previewContainer" class="flex-1 p-6 text-[#eee] overflow-auto bg-[#0a0a0a]">
+        <div class="flex items-center justify-center h-full text-[#666]">
+          <p>点击左侧编辑区开始输入内容 📝</p>
         </div>
-    </nav>
+      </div>
+    </div>
+  </main>
 
-    <!-- 主内容区 -->
-    <main class="container main-content">
-        <!-- 首页区域 -->
-        <section id="home" class="section">
-            <h1>FastAPI Test Frontend</h1>
-            <p>Inspired by <a href="https://www.yannesidibe.com/" target="_blank">yannesidibe.com</a></p>
-            <div class="cta-button">
-                <button id="test-api-btn">Test FastAPI Endpoint</button>
-            </div>
-        </section>
+  <!-- 底部状态栏（深灰） -->
+  <footer class="bg-[#121212] px-6 py-2 text-xs text-[#888] flex items-center justify-between border-t border-[#222]">
+    <div>
+      <span id="charCount">字符数: 0</span> | 
+      <span id="wordCount">单词数: 0</span>
+    </div>
+    <div>
+      <i class="fa fa-check text-[#00ff9d] mr-1"></i>自动保存已开启
+    </div>
+  </footer>
 
-        <!-- API测试区域 -->
-        <section id="api" class="section">
-            <h2>API Test Interface</h2>
-            <div class="api-test-container">
-                <div class="input-section">
-                    <label for="api-endpoint">API Endpoint:</label>
-                    <input type="text" id="api-endpoint" value="/api/hello" placeholder="e.g. /api/hello">
-                    
-                    <label for="request-method">Request Method:</label>
-                    <select id="request-method">
-                        <option value="GET">GET</option>
-                        <option value="POST">POST</option>
-                        <option value="PUT">PUT</option>
-                        <option value="DELETE">DELETE</option>
-                    </select>
-                    
-                    <label for="request-body">Request Body (JSON):</label>
-                    <textarea id="request-body" placeholder='{"name": "Test"}'></textarea>
-                    
-                    <button id="send-request-btn">Send Request</button>
-                </div>
-
-                <div class="response-section">
-                    <label>Response:</label>
-                    <pre id="response-output"></pre>
-                </div>
-            </div>
-        </section>
-
-        <!-- 关于区域 -->
-        <section id="about" class="section">
-            <h2>About This Frontend</h2>
-            <p>Designed for testing FastAPI backend endpoints with a clean, minimal interface.</p>
-            <p>Files are separated into HTML, CSS, and JS for maintainability.</p>
-        </section>
-    </main>
-
-    <!-- 页脚 -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 FastAPI Test Frontend | Inspired by yannesidibe.com</p>
-        </div>
-    </footer>
-
-    <!-- 引入外部JS（分离式） -->
-    <script src="/static/js/main.js"></script>
+  <!-- 本地JS（路径必须正确：/static/js/） -->
+  <script src="/static/js/main.js"></script>
 </body>
 </html>
