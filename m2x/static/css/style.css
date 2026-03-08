@@ -1,202 +1,96 @@
-/* 全局重置 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* 核心：强制编辑器占满容器（解决不能编辑的关键） */
+#editorContainer {
+    width: 100% !important;
+    height: 100% !important;
 }
 
-/* 基础样式 */
-body {
-    background-color: #f8f9fa;
-    color: #333;
-    line-height: 1.6;
+/* 预览区 Markdown 样式（黑色系适配） */
+#previewContainer {
+    line-height: 1.8;
+    font-family: Consolas, Monaco, 'Microsoft Yahei', sans-serif;
 }
 
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* 导航栏样式 */
-.navbar {
-    background-color: #2c3e50;
-    color: white;
-    padding: 1rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.navbar .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-}
-
-.nav-links li {
-    margin-left: 2rem;
-}
-
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.nav-links a.active,
-.nav-links a:hover {
-    color: #3498db;
-}
-
-/* 主内容区样式 */
-.main-content {
-    padding: 4rem 0;
-}
-
-.section {
-    margin-bottom: 5rem;
-}
-
-h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: #2c3e50;
-}
-
-h2 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    color: #34495e;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 0.5rem;
-}
-
-p {
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-}
-
-a {
-    color: #3498db;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* 按钮样式 */
-.cta-button {
-    margin-top: 2rem;
-}
-
-button {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #2980b9;
-}
-
-/* API测试区域样式 */
-.api-test-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.input-section, .response-section {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-label {
-    display: block;
-    margin-bottom: 0.5rem;
+#previewContainer h1,
+#previewContainer h2,
+#previewContainer h3 {
+    margin: 1.5rem 0 0.8rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: #00ff9d;
+    border-bottom: 1px solid #222;
+    padding-bottom: 0.3rem;
 }
 
-input, select, textarea {
-    width: 100%;
-    padding: 0.8rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
+#previewContainer h1 { font-size: 2rem; }
+#previewContainer h2 { font-size: 1.7rem; }
+#previewContainer h3 { font-size: 1.4rem; }
+
+#previewContainer p {
+    margin: 0.8rem 0;
+    color: #eee;
 }
 
-textarea {
-    min-height: 150px;
-    resize: vertical;
+#previewContainer ul,
+#previewContainer ol {
+    margin: 0.8rem 0 0.8rem 2rem;
+    color: #eee;
 }
 
-pre {
-    background-color: #f1f1f1;
+#previewContainer pre {
+    background: #121212;
     padding: 1rem;
-    border-radius: 4px;
+    border-radius: 6px;
     overflow-x: auto;
-    min-height: 150px;
-    color: #2c3e50;
+    margin: 1rem 0;
+    border: 1px solid #222;
 }
 
-/* 页脚样式 */
-.footer {
-    background-color: #2c3e50;
-    color: white;
-    padding: 2rem 0;
-    text-align: center;
+#previewContainer code {
+    background: #1e1e1e;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    color: #ff6b6b;
 }
 
-/* 响应式设计 */
+#previewContainer pre code {
+    background: transparent;
+    padding: 0;
+}
+
+#previewContainer blockquote {
+    border-left: 4px solid #00ff9d;
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: #aaa;
+    font-style: italic;
+}
+
+#previewContainer a {
+    color: #00ff9d;
+    text-decoration: none;
+    border-bottom: 1px dashed #00ff9d;
+}
+
+#previewContainer a:hover {
+    border-bottom: 1px solid #00ff9d;
+}
+
+/* 通用样式修复 */
+* {
+    box-sizing: border-box;
+}
+
+button, select {
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+/* 响应式适配 */
 @media (max-width: 768px) {
-    .api-test-container {
-        grid-template-columns: 1fr;
-    }
-
-    .nav-links {
+    main {
         flex-direction: column;
-        margin-top: 1rem;
     }
-
-    .nav-links li {
-        margin-left: 0;
-        margin-bottom: 0.5rem;
-    }
-
-    .navbar .container {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    h1 {
-        font-size: 2rem;
-    }
-
-    h2 {
-        font-size: 1.5rem;
+    #editorContainer, #previewContainer {
+        min-height: 300px;
     }
 }
