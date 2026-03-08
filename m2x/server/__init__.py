@@ -1,9 +1,6 @@
-from fastapi import FastAPI
-from m2x import get_exec_file_dir
+from .app import start
 
-def start():
-    app = FastAPI()
-    pass
-    @app.get("/")
-    async def read_index():
-        return 
+
+__all__ = [
+    "start"
+]
