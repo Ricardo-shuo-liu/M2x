@@ -2,6 +2,7 @@ from fastapi import FastAPI,Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse,HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
 from pydantic import BaseModel
@@ -50,6 +51,3 @@ def start():
         port=3000,
         log_level="info",
     )
-
-if __name__ == "__main__":
-    start()
