@@ -3,80 +3,193 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>M2x Editor | 黑色系 MD 编辑器</title>
+  <title>M2x Editor | 全能MD编辑器</title>
   <!-- 第三方依赖 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.41.0/min/vs/loader.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- 本地样式（路径必须正确：/static/css/） -->
+  <!-- 本地样式 -->
   <link rel="stylesheet" href="/static/css/style.css">
+  <!-- 轻量化配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            neon: '#00ff9d',
+            darkBg: '#050505',
+            darkerBg: '#0a0a0a',
+            panelBg: '#111111',
+            borderNeon: 'rgba(0, 255, 157, 0.3)',
+            textLight: '#888',
+            // 新增VSCode风格配色
+            vscode: {
+              bg: '#1e1e1e',
+              panel: '#252526',
+              border: '#383838',
+              title: '#61dafb'
+            }
+          },
+          animation: {
+            'emoji-scroll': 'emojiScroll 20s linear infinite',
+          },
+          keyframes: {
+            emojiScroll: {
+              '0%': { transform: 'translateX(0)' },
+              '100%': { transform: 'translateX(-100%)' },
+            }
+          },
+        },
+      }
+    }
+  </script>
 </head>
-<!-- 纯黑色系主体 -->
-<body class="bg-black text-white h-screen flex flex-col m-0 p-0 overflow-hidden">
-  <!-- 顶部导航栏（深灰+青绿色 accent） -->
-  <header class="bg-[#121212] px-6 py-3 shadow-md flex items-center justify-between border-b border-[#222]">
-    <div class="flex items-center gap-2">
-      <i class="fa fa-file-alt text-[#00ff9d] text-xl"></i>
-      <h1 class="text-xl font-bold text-[#00ff9d]">M2x Editor</h1>
-      <span id="fileName" class="text-[#888] text-sm">未命名.md</span>
+<!-- 改用VSCode风格基础配色 -->
+<body class="bg-vscode-bg text-white h-screen flex flex-col m-0 p-0 overflow-hidden relative">
+  <!-- 顶部导航栏（VSCode风格轻量化） -->
+  <header class="relative z-10 bg-vscode-panel px-4 py-2 flex items-center justify-between border-b border-vscode-border">
+    <div class="flex items-center gap-3">
+      <i class="fa fa-code text-neon text-lg"></i>
+      <h1 class="text-lg font-medium text-neon tracking-wider">M2X EDITOR</h1>
+      <span id="fileName" class="text-textLight text-xs bg-vscode-bg px-2 py-0.5 rounded border border-vscode-border/50">未命名.md</span>
     </div>
-    <div class="flex gap-3">
-      <button id="saveBtn" class="px-3 py-1.5 bg-[#1e1e1e] rounded hover:bg-[#282828] transition">
-        <i class="fa fa-save mr-1"></i>保存
+    <div class="flex gap-3 items-center">
+      <!-- 新增：模糊查询功能 -->
+      <div class="relative">
+        <input type="text" id="searchInput" placeholder="模糊查询..." class="bg-vscode-bg text-xs px-3 py-1.5 rounded border border-vscode-border/50 focus:border-neon focus:outline-none w-40 transition-all duration-200 pl-8">
+        <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-textLight text-xs"></i>
+        <span id="searchCount" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neon hidden">0/0</span>
+      </div>
+      <!-- 功能开关：大纲面板 -->
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-textLight">大纲：</span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="outlineToggle" checked class="sr-only peer">
+          <div class="w-9 h-5 bg-vscode-panel rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-neon"></div>
+        </label>
+      </div>
+      <!-- 功能开关：可视化面板 -->
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-textLight">预览区：</span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="previewToggle" checked class="sr-only peer">
+          <div class="w-9 h-5 bg-vscode-panel rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-neon"></div>
+        </label>
+      </div>
+      <!-- 功能开关：Emoji面板 -->
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-textLight">Emoji：</span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="emojiToggle" checked class="sr-only peer">
+          <div class="w-9 h-5 bg-vscode-panel rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-neon"></div>
+        </label>
+      </div>
+      <button id="saveBtn" class="px-3 py-1.5 bg-vscode-panel rounded border border-vscode-border hover:border-neon transition-all duration-200 text-xs">
+        <i class="fa fa-save mr-1 text-neon"></i>保存
       </button>
-      <button id="exportBtn" class="px-3 py-1.5 bg-[#00ff9d] text-black rounded hover:bg-[#00e08b] transition">
-        <i class="fa fa-download mr-1"></i>导出
+      <button id="exportBtn" class="px-3 py-1.5 bg-neon text-black rounded text-xs font-medium hover:brightness-110 transition-all duration-200 relative">
+        <i class="fa fa-rocket mr-1"></i>导出
+        <span id="exportLoading" class="hidden absolute -right-1 -top-1 w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
       </button>
-      <select id="outputFormat" class="bg-[#1e1e1e] rounded px-2 py-1.5 text-sm border border-[#333]">
-        <option value="html">HTML</option>
-        <option value="pdf">PDF</option>
-        <option value="docx">Word</option>
+      <select id="outputFormat" class="bg-vscode-panel rounded border border-vscode-border hover:border-neon px-2 py-1.5 text-xs transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-neon">
+        <option value="html" class="bg-vscode-panel text-white">HTML</option>
+        <option value="pdf" class="bg-vscode-panel text-white">PDF</option>
+        <option value="docx" class="bg-vscode-panel text-white">Word</option>
       </select>
     </div>
   </header>
 
-  <!-- 核心编辑区域（纯黑+深灰） -->
-  <main class="flex-1 flex flex-col md:flex-row gap-4 p-4 overflow-hidden">
-    <!-- 左侧编辑区（纯黑背景） -->
-    <div class="w-full md:w-1/2 h-full flex flex-col bg-[#0a0a0a] rounded-lg shadow-md overflow-hidden border border-[#222]">
-      <div class="px-4 py-2 border-b border-[#222] flex items-center bg-[#0f0f0f]">
-        <i class="fa fa-edit text-[#888] mr-2"></i>
-        <span>编辑区</span>
-        <button id="formatBtn" class="ml-auto text-xs bg-[#1e1e1e] px-2 py-1 rounded hover:bg-[#282828]">格式化</button>
+  <!-- 核心编辑区域（VSCode三栏布局） -->
+  <main class="relative z-10 flex-1 flex overflow-hidden" id="mainContainer">
+    <!-- 左侧大纲面板 -->
+    <div id="outlinePanel" class="w-64 bg-vscode-panel border-r border-vscode-border flex flex-col overflow-hidden">
+      <div class="px-3 py-2 border-b border-vscode-border flex items-center">
+        <i class="fa fa-list-ul text-neon mr-2 text-xs"></i>
+        <span class="text-xs font-medium text-white">标题大纲</span>
+        <button id="refreshOutlineBtn" class="ml-auto text-xs bg-vscode-panel p-1 rounded border border-vscode-border/50 hover:border-neon transition-all duration-200">
+          <i class="fa fa-sync-alt text-neon text-[8px]"></i>
+        </button>
       </div>
-      <!-- 编辑器容器（必须有 id=editorContainer） -->
+      <div id="outlineContainer" class="flex-1 overflow-auto px-2 py-2">
+        <div class="text-textLight text-xs text-center py-8">
+          <i class="fa fa-file-alt mb-2"></i>
+          <p>无标题内容</p>
+          <p class="mt-1 text-[10px]">输入Markdown标题自动生成</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 大纲-编辑区分隔条 -->
+    <div class="w-2 flex items-center justify-center cursor-col-resize hover:bg-neon/20 transition-colors duration-200 border-r border-vscode-border" id="outlineResizer">
+      <div class="w-0.5 h-12 bg-vscode-border rounded-full"></div>
+    </div>
+
+    <!-- 中间编辑区 -->
+    <div class="flex-1 flex flex-col bg-vscode-panel overflow-hidden" id="editorPanel">
+      <div class="px-3 py-2 border-b border-vscode-border flex items-center">
+        <i class="fa fa-terminal text-neon mr-2 text-xs"></i>
+        <span class="text-xs font-medium text-white">编辑区</span>
+        <button id="formatBtn" class="ml-auto text-xs bg-vscode-panel px-2 py-1 rounded border border-vscode-border/50 hover:border-neon transition-all duration-200">
+          <i class="fa fa-indent mr-1 text-neon text-[8px]"></i>格式化
+        </button>
+      </div>
+      
+      <!-- Emoji面板（仅放在编辑区上方） -->
+      <div id="emojiPanel" class="relative z-10 h-10 bg-vscode-panel border-b border-vscode-border overflow-hidden">
+        <div class="flex whitespace-nowrap animate-emoji-scroll h-full items-center px-3" id="emojiContainer">
+          😀 😁 😂 🤣 😃 😄 😅 😆 😉 😊 😋 😎 😍 😘 🥰 😗 😙 😚 🙃 😉 🤗 🤩 🤔 🤨 😐 😑 😶 🙄 😏 😣 😥 😮 🤐 😯 😪 😫 🥱 😴 😌 😛 😜 😝 🤑 😲 ☠️ 💀 💩 🤡 👹 👺 👻 👽 👾 🤖 🎃 😺 😸 😹 😻 😼 😽 🙀 😿 😾 🐱 🐶 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐽 🐸 🐵 🙈 🙉 🙊 🐒 🐔 🐧 🐦 🐤 🐣 🐥 🦆 🦅 🦉 🦇 🐺 🐗 🐴 🦄 🐝 🐛 🦋 🐌 🐚 🐞 🦗 🕷️ 🕸️ 🦂 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳 🐋 🦈 🐊 🐅 🐆 🦓 🦍 🦧 🐘 🦣 🦛 🦏 🐪 🐫 🦒 🦘 🐐 🐏 🐑 🦙 🐕 🐩 🦮 🐕‍🦺 🐈 🐈‍⬛ 🦤 🦢 🦩 🦚 🦜 🐓 🦃 🦤 🪿 🐁 🐀 🐇 🐿️ 🦔 🦇 🐾 🐉 🐲 🌵 🪴 🌴 🌱 🌿 ☘️ 🎍 🎋 🪷 🪸 🪯 🪼 🌸 🌸 🌹 🌺 🌻 🌼 💐 💷 💶 💴 💵 🪙 🎫 🎟️ 💳 🪪 💰 🧾 💸 ✨ ⭐ ✨ ⭐ 🌟 ✨ ⭐ 🌟 ✨
+        </div>
+      </div>
+
       <div id="editorContainer" class="flex-1 w-full h-full"></div>
     </div>
 
-    <!-- 右侧预览区（深灰背景） -->
-    <div class="w-full md:w-1/2 h-full flex flex-col bg-[#0a0a0a] rounded-lg shadow-md overflow-hidden border border-[#222]">
-      <div class="px-4 py-2 border-b border-[#222] flex items-center bg-[#0f0f0f]">
-        <i class="fa fa-eye text-[#888] mr-2"></i>
-        <span class="text-[#ddd]">预览区</span>
-        <button id="refreshPreviewBtn" class="ml-auto text-xs bg-[#1e1e1e] px-2 py-1 rounded hover:bg-[#282828]">
-          刷新
+    <!-- 编辑-预览分隔条 -->
+    <div class="w-2 flex items-center justify-center cursor-col-resize hover:bg-neon/20 transition-colors duration-200 border-r border-vscode-border" id="editorResizer">
+      <div class="w-0.5 h-12 bg-vscode-border rounded-full"></div>
+    </div>
+
+    <!-- 右侧预览区（可隐藏） -->
+    <div class="w-1/2 bg-vscode-panel border-l border-vscode-border flex flex-col overflow-hidden" id="previewPanel">
+      <div class="px-3 py-2 border-b border-vscode-border flex items-center">
+        <i class="fa fa-eye text-neon mr-2 text-xs"></i>
+        <span class="text-xs font-medium text-white">预览区 (HTML)</span>
+        <button id="refreshPreviewBtn" class="ml-auto text-xs bg-vscode-panel px-2 py-1 rounded border border-vscode-border/50 hover:border-neon transition-all duration-200">
+          <i class="fa fa-sync-alt mr-1 text-neon text-[8px]"></i>刷新
         </button>
       </div>
-      <div id="previewContainer" class="flex-1 p-6 text-[#eee] overflow-auto bg-[#0a0a0a]">
-        <div class="flex items-center justify-center h-full text-[#666]">
-          <p>点击左侧编辑区开始输入内容 📝</p>
+      <div class="flex-1 p-4 overflow-auto">
+        <div id="previewContainer" class="text-white w-full h-full">
+          <div class="flex items-center justify-center h-full text-textLight">
+            <div class="text-center">
+              <i class="fa fa-keyboard text-neon text-3xl mb-2"></i>
+              <p class="text-sm">点击左侧编辑区开始输入内容 🚀</p>
+              <p class="text-xs mt-1 text-textLight/70">支持 Markdown 语法高亮+实时预览</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- 底部状态栏（深灰） -->
-  <footer class="bg-[#121212] px-6 py-2 text-xs text-[#888] flex items-center justify-between border-t border-[#222]">
-    <div>
-      <span id="charCount">字符数: 0</span> | 
-      <span id="wordCount">单词数: 0</span>
+  <!-- 底部状态栏（VSCode风格轻量化） -->
+  <footer class="relative z-10 bg-vscode-panel px-4 py-1 text-[10px] text-textLight flex items-center justify-between border-t border-vscode-border">
+    <div class="flex gap-4">
+      <span id="charCount" class="flex items-center gap-1"><i class="fa fa-file-text-o text-neon"></i> 字符数: 0</span>
+      <span id="wordCount" class="flex items-center gap-1"><i class="fa fa-font text-neon"></i> 单词数: 0</span>
+      <span id="lineCount" class="flex items-center gap-1"><i class="fa fa-list-ol text-neon"></i> 行数: 0</span>
     </div>
-    <div>
-      <i class="fa fa-check text-[#00ff9d] mr-1"></i>自动保存已开启
+    <div class="flex items-center gap-2">
+      <i class="fa fa-shield text-neon"></i>
+      <span>自动保存已开启</span>
     </div>
   </footer>
 
-  <!-- 本地JS（路径必须正确：/static/js/） -->
+  <!-- 复制提示 -->
+  <div id="copyTip" class="fixed bottom-6 right-6 px-3 py-2 rounded bg-neon text-black text-xs opacity-0 transition-opacity duration-300 z-50 shadow-lg">
+    已复制到剪贴板 ✅
+  </div>
+
   <script src="/static/js/main.js"></script>
 </body>
 </html>

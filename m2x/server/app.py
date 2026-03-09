@@ -1,12 +1,15 @@
 from fastapi import FastAPI,Request
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import FileResponse,HTMLResponse
+from fastapi.responses import FileResponse,HTMLResponse,StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
 from pydantic import BaseModel
 from m2x import get_exec_file_dir
+from m2x.Converter import converter
+from weasyprint import HTML as WeasyHTML
+import io
 def start():
     app = FastAPI(
         title="deeptracer",
@@ -32,17 +35,31 @@ def start():
         target_format: str = "html"
     @app.post("/api/convert-md")
     async def convert_md(req: ConvertRequest):
-        # 这里替换为你的本地 MD 转化函数
-        # 示例：简单转化（实际替换为你的 M2x 工具逻辑）
+        converters = converter()
         if req.target_format == "html":
-            converted_content = f"<!-- Converted by M2x -->\n{req.content.upper()}"
-        else:
-            converted_content = req.content
-        return {
+            converted_content = converters.content_md2html(req.content)
+            return {
             "success": True,
             "converted_content": converted_content,
             "target_format": req.target_format
         }
+        elif req.target_format == "pdf":
+            html_content = converters.content_md2html(req.content)
+            pdf_buffer = io.BytesIO()
+            WeasyHTML(string=html_content).write_pdf(pdf_buffer)
+            pdf_buffer.seek(0)  # 重置文件指针到开头
+            # 返回PDF文件流
+            return StreamingResponse(
+                pdf_buffer,
+                media_type="application/pdf",
+                headers={
+                    "Content-Disposition": "attachment; filename=m2x_export.pdf"
+                }
+                )
+        elif req.target_format == "word":
+            pass
+        else:
+            pass
 
     
     uvicorn.run(
@@ -51,3 +68,6 @@ def start():
         port=3000,
         log_level="info",
     )
+
+if __name__ == "__main__":
+    start()
