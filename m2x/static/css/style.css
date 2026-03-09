@@ -1,96 +1,301 @@
-/* 核心：强制编辑器占满容器（解决不能编辑的关键） */
-#editorContainer {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* 预览区 Markdown 样式（黑色系适配） */
-#previewContainer {
-    line-height: 1.8;
-    font-family: Consolas, Monaco, 'Microsoft Yahei', sans-serif;
-}
-
-#previewContainer h1,
-#previewContainer h2,
-#previewContainer h3 {
-    margin: 1.5rem 0 0.8rem;
-    font-weight: 600;
-    color: #00ff9d;
-    border-bottom: 1px solid #222;
-    padding-bottom: 0.3rem;
-}
-
-#previewContainer h1 { font-size: 2rem; }
-#previewContainer h2 { font-size: 1.7rem; }
-#previewContainer h3 { font-size: 1.4rem; }
-
-#previewContainer p {
-    margin: 0.8rem 0;
-    color: #eee;
-}
-
-#previewContainer ul,
-#previewContainer ol {
-    margin: 0.8rem 0 0.8rem 2rem;
-    color: #eee;
-}
-
-#previewContainer pre {
-    background: #121212;
-    padding: 1rem;
-    border-radius: 6px;
-    overflow-x: auto;
-    margin: 1rem 0;
-    border: 1px solid #222;
-}
-
-#previewContainer code {
-    background: #1e1e1e;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    color: #ff6b6b;
-}
-
-#previewContainer pre code {
-    background: transparent;
-    padding: 0;
-}
-
-#previewContainer blockquote {
-    border-left: 4px solid #00ff9d;
-    padding-left: 1rem;
-    margin: 1rem 0;
-    color: #aaa;
-    font-style: italic;
-}
-
-#previewContainer a {
-    color: #00ff9d;
-    text-decoration: none;
-    border-bottom: 1px dashed #00ff9d;
-}
-
-#previewContainer a:hover {
-    border-bottom: 1px solid #00ff9d;
-}
-
-/* 通用样式修复 */
+/* 基础重置 */
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-button, select {
-    cursor: pointer;
-    border: none;
-    outline: none;
+/* 编辑器容器 */
+#editorContainer {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 300px !important;
 }
 
-/* 响应式适配 */
+/* 预览区样式（保留原有逻辑） */
+#previewContainer {
+    line-height: 1.8;
+    font-family: 'Consolas', Monaco, 'Microsoft Yahei', sans-serif;
+}
+
+#previewContainer .preview-inner {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+}
+
+#previewContainer * {
+    background: transparent !important;
+    color: #eee !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-color: rgba(0, 255, 157, 0.1) !important; /* 降低边框透明度 */
+}
+
+#previewContainer p {
+    margin: 0.8rem 0 !important;
+    line-height: 1.8;
+}
+
+/* 优化标题下划线样式 - 更美观的渐变下划线 */
+#previewContainer h1,
+#previewContainer h2,
+#previewContainer h3 {
+    margin: 1.8rem 0 1rem !important;
+    font-weight: 700 !important;
+    color: #00ff9d !important;
+    padding-bottom: 0.5rem !important;
+    /* 替换丑的实线为渐变下划线 */
+    border-bottom: none !important;
+    position: relative !important;
+}
+
+/* 标题底部渐变线 */
+#previewContainer h1::after,
+#previewContainer h2::after,
+#previewContainer h3::after {
+    content: "" !important;
+    position: absolute !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    height: 1px !important;
+    width: 100% !important;
+    /* 渐变效果：从霓虹色到透明 */
+    background: linear-gradient(90deg, rgba(0, 255, 157, 0.8), rgba(0, 255, 157, 0.1)) !important;
+}
+
+/* 不同级别标题的渐变长度区分 */
+#previewContainer h1::after { width: 100% !important; }
+#previewContainer h2::after { width: 80% !important; }
+#previewContainer h3::after { width: 60% !important; }
+
+#previewContainer h1 { font-size: 1.8rem !important; }
+#previewContainer h2 { font-size: 1.5rem !important; }
+#previewContainer h3 { font-size: 1.2rem !important; }
+
+#previewContainer ul,
+#previewContainer ol {
+    margin: 0.8rem 0 0.8rem 2.5rem !important;
+    list-style: disc !important;
+}
+
+#previewContainer pre {
+    background: #111 !important;
+    padding: 1.2rem !important;
+    border-radius: 8px !important;
+    overflow-x: auto !important;
+    margin: 1.2rem 0 !important;
+    border: 1px solid rgba(0, 255, 157, 0.2) !important; /* 降低边框透明度 */
+}
+
+#previewContainer code {
+    background: #1a1a1a !important;
+    padding: 0.2rem 0.4rem !important;
+    border-radius: 4px !important;
+    color: #00ff9d !important;
+    font-size: 0.95rem;
+}
+
+#previewContainer blockquote {
+    border-left: 4px solid #00ff9d !important;
+    padding-left: 1.2rem !important;
+    margin: 1.2rem 0 !important;
+    color: #aaa !important;
+    font-style: italic !important;
+    background: linear-gradient(to right, rgba(0, 255, 157, 0.08), transparent) !important;
+}
+
+#previewContainer a {
+    color: #00ff9d !important;
+    text-decoration: none !important;
+    border-bottom: 1px dashed rgba(0, 255, 157, 0.5) !important; /* 降低下划线透明度 */
+    transition: all 0.2s;
+}
+
+#previewContainer a:hover {
+    border-bottom: 1px solid #00ff9d !important;
+}
+
+/* Emoji面板样式（适配新布局 - 仅编辑区上方） */
+#emojiContainer {
+    display: flex;
+    width: 200%;
+}
+
+/* 导出按钮高对比度（保留） */
+#exportBtn {
+    color: #000 !important;
+    font-weight: 600 !important;
+    background-color: #00ff9d !important;
+}
+
+#exportBtn:hover {
+    background-color: #00e08b !important;
+}
+
+/* 拖拽分隔条样式（适配双分隔条） */
+#outlineResizer, #editorResizer {
+    user-select: none;
+    -webkit-user-select: none;
+    transition: all 0.2s ease;
+    background-color: #252526 !important;
+}
+
+#outlineResizer:hover, #editorResizer:hover {
+    background-color: rgba(0, 255, 157, 0.2) !important;
+}
+
+/* 轻量化交互（保留） */
+button {
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 255, 157, 0.1);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* 滚动条样式（VSCode风格） */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #252526 !important;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #444444 !important;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00ff9d !important;
+}
+
+/* 响应式适配（适配三栏布局） */
 @media (max-width: 768px) {
-    main {
-        flex-direction: column;
+    #mainContainer {
+        flex-direction: column !important;
+        height: calc(100vh - 60px) !important; /* 移除Emoji面板高度影响 */
     }
-    #editorContainer, #previewContainer {
-        min-height: 300px;
+    #outlinePanel {
+        width: 100% !important;
+        height: 120px !important;
+        border-right: none !important;
+        border-bottom: 1px solid #383838 !important;
     }
+    #editorPanel, #previewPanel {
+        width: 100% !important;
+        height: 45% !important;
+    }
+    #outlineResizer, #editorResizer {
+        display: none !important;
+    }
+    #emojiContainer {
+        animation: none !important;
+        overflow-x: auto !important;
+        width: 100% !important;
+    }
+    header .flex {
+        flex-wrap: wrap;
+        gap: 2px !important;
+    }
+    /* 移动端Emoji面板适配 */
+    #emojiPanel {
+        height: 80px !important;
+        overflow-y: auto !important;
+    }
+    /* 移动端搜索框适配 */
+    #searchInput {
+        width: 30px !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        transition: width 0.3s ease !important;
+    }
+    #searchInput:focus {
+        width: 120px !important;
+    }
+}
+
+/* 编辑器样式冲突修复（VSCode风格） */
+.vs-dark .monaco-editor-background {
+    background-color: #1e1e1e !important;
+}
+
+.vs-dark .monaco-editor .margin {
+    background-color: #1e1e1e !important;
+    border-right: 1px solid #383838 !important;
+}
+
+.vs-dark .monaco-editor .line-numbers {
+    color: #888888 !important;
+}
+
+/* 界面松耦合：VSCode风格间距优化 */
+#mainContainer {
+    gap: 0 !important;
+    padding: 0 !important;
+    height: calc(100vh - 60px) !important; /* 移除顶部Emoji面板高度影响 */
+}
+
+#outlinePanel, #editorPanel, #previewPanel {
+    border-radius: 0 !important;
+    overflow: hidden !important;
+}
+
+header, footer {
+    padding: 0.5rem 1rem !important;
+}
+
+/* 大纲面板样式 */
+#outlinePanel {
+    transition: width 0.2s ease;
+}
+
+.outline-item {
+    transition: all 0.1s ease;
+}
+
+.outline-item:hover {
+    background-color: rgba(0, 255, 157, 0.1) !important;
+}
+
+/* 功能开关样式优化 */
+.peer-checked:bg-neon {
+    background-color: #00ff9d !important;
+}
+
+/* 新增行数统计样式 */
+#lineCount {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* 复制提示样式适配 */
+#copyTip {
+    box-shadow: 0 4px 12px rgba(0, 255, 157, 0.2);
+}
+
+/* 新增：模糊查询样式 */
+#searchInput {
+    transition: all 0.2s ease;
+}
+#searchInput:focus {
+    box-shadow: 0 0 0 1px rgba(0, 255, 157, 0.5);
+}
+#searchCount {
+    transition: opacity 0.2s ease;
+}
+
+/* 搜索匹配高亮样式 */
+.monaco-editor .search-match {
+    background-color: rgba(255, 255, 0, 0.2) !important;
+    border-radius: 2px !important;
 }

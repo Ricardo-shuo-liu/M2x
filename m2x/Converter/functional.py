@@ -51,6 +51,22 @@ class converter():
 
         
         return self.escape_html_code(html_content)
+    def content_md2html(self,content):
+        """
+        将md的content转化为html
+        """
+        html_content = markdown.markdown(content,extensions=['tables', 'fenced_code','toc','admonition','footnotes','nl2br','smarty'])
+        return self.escape_html_code(html_content)
+    def content_md2word(self,content):
+        """
+        将md的content转化为word格式
+        """
+        pass
+    def content_md2pdf(self,content):
+        """
+        将md的content转化为pdf格式
+        """
+        pass
     def _get_content(self,
                      MdPath:str)->str:
         """

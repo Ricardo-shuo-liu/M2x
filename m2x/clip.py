@@ -2,6 +2,7 @@ import argparse
 from .Converter import converter
 import sys
 from pathlib import Path
+from m2x.server import start
 def main():
     """
     命令行api接口
@@ -24,7 +25,7 @@ def main():
             parse.error("--server mode does not support -p/--pdf or -w/--word parameters")
             sys.exit(1)
         else:
-            print("目前功能没有完成")
+            start()
             sys.exit(1)
     
     if args.pdf is None and args.word is None:
