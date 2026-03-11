@@ -4,7 +4,7 @@ from docx import Document
 from docx.shared import Inches
 import os
 from m2x import get_exec_file_dir
-
+from m2x.Converter import feature
 class converter():
     
 
@@ -61,12 +61,7 @@ class converter():
         """
         将md的content转化为word格式
         """
-        pass
-    def content_md2pdf(self,content):
-        """
-        将md的content转化为pdf格式
-        """
-        pass
+        self.content_md2html(content=content)
     def _get_content(self,
                      MdPath:str)->str:
         """
@@ -98,7 +93,8 @@ class converter():
         将md内容转化为word
         """
         htmlContent = self._md_to_html(MdPath)
-        doc = Document()# 创建转化对象
-        doc.add_paragraph(htmlContent)
-        doc.save(savePath)
+        transformer = feature.HTMLToWordConverter()
+        transformer.convert_html_to_word(
+            html_content=htmlContent
+            ,save_path=savePath)
         
