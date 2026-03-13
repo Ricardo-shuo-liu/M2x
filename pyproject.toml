@@ -25,10 +25,41 @@ dependencies=[
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>= 9.0.2 "]
+dev = ["pytest>= 9.0.2 "，
+        "build>=1.0.3", 
+        "twine>=4.0.2"]
 
 [project.scripts]
 m2x = "m2x.clip:main"
+description = "轻量级Markdown转换器，支持MD转HTML/PDF/Word，内置FastAPI可视化界面"
+long_description = file: README.md
+long_description_content_type = "text/markdown"
+
+license = {text = "MIT"}
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Text Processing :: Markup :: Markdown",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Framework :: FastAPI",
+    "Development Status :: 4 - Beta"
+]
+urls = {
+    "Homepage" = "https://github.com/Ricardo-shuo-liu/M2x",
+    "Bug Tracker" = "https://github.com/Ricardo-shuo-liu/M2x/issues"
+}
 
 [tool.setuptools]
 packages = ["m2x"]
+include_package_data = true
+
+[tool.setuptools.package-data
+]
+m2x = [
+    "static/**/*",
+]
