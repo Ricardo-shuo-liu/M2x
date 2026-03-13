@@ -5,14 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 # 基础元信息
 name = "python-m2x"
-version = "0.1.0"
+version = "0.1.2"
 authors = [{name = "Ricardo", email = "13838152117@139.com"}]
 readme = "README.md"
 requires-python = ">=3.10.19"
 
-# 核心依赖（修正多余空格）
+# 核心依赖
 dependencies = [
-    "markdown2>=2.5.4",
+    "markdown>=3.10.2",
     "weasyprint>=68.0",
     "fastapi>=0.135.1",
     "uvicorn>=0.41.0",  # 移除多余空格
@@ -59,7 +59,11 @@ m2x = "m2x.clip:main"
 
 
 [tool.setuptools]
-packages = ["m2x"]
+packages.find = { 
+    where = ["."],         
+    include = ["m2x*"],   
+    exclude = ["tests*"]   
+}
 include-package-data = true
 
 [tool.setuptools.package-data] 

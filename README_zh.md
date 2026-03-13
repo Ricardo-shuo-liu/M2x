@@ -49,6 +49,10 @@ cd M2x
 ```bash
 pip install -e .
 ```
+### 也可以选择🎃
+```
+pip install python-m2x
+```
 
 ## 基本使用
 
