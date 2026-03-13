@@ -1,8 +1,6 @@
-from fastapi import FastAPI,Request
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI
 from fastapi.responses import FileResponse,HTMLResponse,StreamingResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
 from pydantic import BaseModel
@@ -46,7 +44,7 @@ def start():
         elif req.target_format == "pdf":
             html_content = converters.content_md2html(req.content)
             pdf_buffer = io.BytesIO()
-            WeasyHTML(string=html_content).write_pdf(pdf_buffer)
+            converters.content_html2pdf(htmlContent=html_content,savePath=pdf_buffer)
             pdf_buffer.seek(0)  # 重置文件指针到开头
             # 返回PDF文件流
             return StreamingResponse(
@@ -56,8 +54,18 @@ def start():
                     "Content-Disposition": "attachment; filename=m2x_export.pdf"
                 }
                 )
-        elif req.target_format == "word":
-            pass
+        elif req.target_format == "docx":
+            html_content = converters.content_md2html(req.content)
+            word_buffer = io.BytesIO()
+            converters.content_html2word(htmlContent=html_content,savePath=word_buffer)
+            word_buffer.seek(0)  # 重置文件指针到开头
+            # 返回word文件流
+            return StreamingResponse(
+                word_buffer,
+                media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                headers={
+                    "Content-Disposition": "attachment; filename=m2x_export.word"
+                })
         else:
             pass
 
@@ -68,6 +76,3 @@ def start():
         port=3000,
         log_level="info",
     )
-
-if __name__ == "__main__":
-    start()

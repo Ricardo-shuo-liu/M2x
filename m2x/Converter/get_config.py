@@ -1,3 +1,4 @@
+EXTENSION = """
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -54,3 +55,4 @@
 <!-- ...... 其余内容 ...... -->
 </body>
 </html>
+"""
