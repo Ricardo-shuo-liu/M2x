@@ -21,7 +21,7 @@ dependencies = [
     "lxml>=6.0.2"
 ]
 description = "轻量级Markdown转换器，支持MD转HTML/PDF/Word，内置FastAPI可视化界面"
-long_description = file: README.md
+long_description = "file: README.md"
 long_description_content_type = "text/markdown"
 
 # 许可证
