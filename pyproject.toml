@@ -60,7 +60,7 @@ m2x = "m2x.clip:main"
 
 [tool.setuptools]
 packages = ["m2x"]
-include_package_data = true
+include-package-data = true
 
 [tool.setuptools.package-data] 
 m2x = [
