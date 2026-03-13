@@ -1,4 +1,4 @@
-from .functional import converter
+from .core import converter
 
 __all__ = [
     "converter",

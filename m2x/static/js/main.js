@@ -62,7 +62,7 @@ function initEditor() {
     });
 }
 
-// 绑定事件（保留原有逻辑，新增大纲刷新按钮）
+// 绑定事件（保留原有逻辑，修复Word导出分支）
 function bindEvents() {
     // 保存按钮（原有逻辑）
     document.getElementById('saveBtn').addEventListener('click', () => {
@@ -79,8 +79,8 @@ function bindEvents() {
         alert('MD文件已保存！');
     });
 
-    // 导出按钮（原有逻辑）
-    document.getElementById('exportBtn').addEventListener('click', async () => {
+    // 导出按钮（修复Word导出逻辑）
+      document.getElementById('exportBtn').addEventListener('click', async () => {
         if (isExporting) return;
         const content = editor.getValue();
         const format = document.getElementById('outputFormat').value;
@@ -116,15 +116,13 @@ function bindEvents() {
                 a.download = `m2x_export.${format}`;
                 a.click();
                 alert('HTML文件已导出！');
-            } else if (format === "pdf") {
+            } else {  // PDF和Word统一处理（简化逻辑）
                 const blob = await response.blob();
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
                 a.download = `m2x_export.${format}`;
                 a.click();
-                alert('PDF文件已开始下载！');
-            } else {
-                alert('Word导出功能需集成docx.js，建议参考：https://github.com/dolanmiu/docx');
+                alert(`${format.toUpperCase()}文件已开始下载！`);
             }
         } catch (error) {
             alert(`导出失败：${error.message}`);
@@ -134,6 +132,7 @@ function bindEvents() {
             exportLoading.classList.add('hidden');
         }
     });
+
 
     // 刷新预览按钮（原有逻辑）
     document.getElementById('refreshPreviewBtn').addEventListener('click', () => {

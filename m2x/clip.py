@@ -54,13 +54,13 @@ def main():
             md_path = validate_path(args.pdf[0])
             save_path = Path(args.pdf[1]).resolve()
             validate_target_path(save_path,target_type="pdf")
-            converters._md_to_PDF(MdPath=str(md_path), savePath=str(save_path))  # 建议用小写方法名符合PEP8
+            converters.md_to_PDF(MdPath=str(md_path), savePath=str(save_path))  # 建议用小写方法名符合PEP8
             print(f"Successfully converted MD to PDF: {save_path}")
         elif args.word:
             md_path = validate_path(args.word[0])
             save_path = Path(args.word[1]).resolve()
             validate_target_path(save_path,target_type="word")
-            converters._md_to_WORD(MdPath=str(md_path), savePath=str(save_path))
+            converters.md_to_WORD(MdPath=str(md_path), savePath=str(save_path))
             print(f"Successfully converted MD to Word: {save_path}")
     except FileNotFoundError as e:
         parse.error(f"File error: {str(e)}")
@@ -71,6 +71,3 @@ def main():
     except Exception as e:
         parse.error(f"Conversion failed: {str(e)} (Please check file paths and dependencies)")
         sys.exit(1)
-
-if __name__ == "__main__":
-    main()
