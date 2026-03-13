@@ -14,3 +14,6 @@ __pycache__/
 *.egg-info/
 *.egg.info/
 
+
+dist/python_m2x-0.1.2-py3-none-any.whl
+dist/python_m2x-0.1.2.tar.gz

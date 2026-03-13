@@ -48,7 +48,10 @@ cd m2x
 ```bash
 pip install -e .
 ```
-
+### or you can choose🎃
+```
+pip install python-m2x
+```
 ## Basic Usage
 
 #### Command Line Interface 😵
