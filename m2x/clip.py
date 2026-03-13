@@ -1,5 +1,5 @@
 import argparse
-from .Converter import converter
+from m2x.Converter import converter
 import sys
 from pathlib import Path
 from m2x.server import start

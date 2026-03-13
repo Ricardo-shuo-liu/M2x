@@ -1,6 +1,4 @@
 import markdown
-import os
-from m2x import get_exec_file_dir
 from m2x.Converter import HTML2X
 
 class converter():
@@ -10,7 +8,7 @@ class converter():
         """
         获得指定地址的内容
         """
-        with open(MdPath,'r') as fp:
+        with open(MdPath,'r',encoding="utf-8") as fp:
             content = fp.read()
         return content
     def _md_to_html(self,

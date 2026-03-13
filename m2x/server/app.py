@@ -8,26 +8,33 @@ from m2x import get_exec_file_dir
 from m2x.Converter import converter
 from weasyprint import HTML as WeasyHTML
 import io
+import importlib.resources
 def start():
     app = FastAPI(
         title="deeptracer",
         description="link body",
     )
     # 创建节点
-    dir_path = os.path.dirname(get_exec_file_dir(__file__))
-    static_path = os.path.join(dir_path,"static")
+    try:
+        # 获取m2x包内static目录的绝对路径
+        with importlib.resources.files("m2x").joinpath("static") as static_dir:
+            static_path = str(static_dir)
+    # 本地开发时用相对路径
+    except Exception:
+        from m2x import get_exec_file_dir
+        dir_path = os.path.dirname(get_exec_file_dir(__file__))
+        static_path = os.path.join(dir_path, "static")
     # 获得路径
     app.mount("/static",StaticFiles(directory=static_path),name="static")
     # 读取模板和挂载文件
     @app.get("/")
     async def index():
         try:
-            return FileResponse(
-                os.path.join(static_path,"index.html"),
-                media_type="text/html" 
-            )
+            with importlib.resources.files("m2x").joinpath("static/index.html").open("r", encoding="utf-8") as f:
+                html_content = f.read()
+                return HTMLResponse(content=html_content)
         except Exception:
-            HTMLResponse(content="<h1>404 - 文件不存在</h1>", status_code=404)
+            return FileResponse(os.path.join(static_path, "index.html"))
     class ConvertRequest(BaseModel):
         content: str
         target_format: str = "html"
@@ -64,10 +71,14 @@ def start():
                 word_buffer,
                 media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 headers={
-                    "Content-Disposition": "attachment; filename=m2x_export.word"
+                    "Content-Disposition": "attachment; filename=m2x_export.docx"
                 })
         else:
-            pass
+            return {
+        "success": False,
+        "message": f"不支持的格式：{req.target_format}，仅支持html/pdf/docx",
+        "supported_formats": ["html", "pdf", "docx"]
+    }
 
     
     uvicorn.run(

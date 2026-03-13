@@ -34,13 +34,6 @@ class CleanHTML():
         extension = get_config.EXTENSION
         return extension + final_html
     
-
-from docx import Document
-from docx.shared import Pt, RGBColor
-from docx.oxml import OxmlElement
-from docx.oxml.ns import qn
-from bs4 import BeautifulSoup
-
 class HTMLToWordConverter:
 
     def _init_styles(self):
