@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 # 基础元信息
-name = "m2x"
+name = "python-m2x"
 version = "0.1.0"
 authors = [{name = "Ricardo", email = "13838152117@139.com"}]
 readme = "README.md"
