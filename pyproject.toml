@@ -2,41 +2,32 @@
 requires = ["setuptools>=61.0","wheel"]
 build-backend = "setuptools.build_meta"
 
-
 [project]
-name="m2x"
+# 基础元信息
+name = "m2x"
+version = "0.1.0"
+authors = [{name = "Ricardo", email = "13838152117@139.com"}]
+readme = "README.md"
+requires-python = ">=3.10.19"
 
-version="0.1.0"
-
-authors=[{name="Ricardo",email="13838152117@139.com"}]
-
-readme="README.md"
-
-requires-python=">=3.10.19"
-
-dependencies=[
+# 核心依赖（修正多余空格）
+dependencies = [
     "markdown2>=2.5.4",
     "weasyprint>=68.0",
     "fastapi>=0.135.1",
-    "uvicorn>=0.41.0" ,
-    "docx>=1.2.0",
+    "uvicorn>=0.41.0",  # 移除多余空格
+    "python-docx>=1.2.0",
     "beautifulsoup4>=4.14.3",
     "lxml>=6.0.2"
 ]
-
-[project.optional-dependencies]
-dev = ["pytest>= 9.0.2 "，
-        "build>=1.0.3", 
-        "twine>=4.0.2"]
-
-[project.scripts]
-m2x = "m2x.clip:main"
 description = "轻量级Markdown转换器，支持MD转HTML/PDF/Word，内置FastAPI可视化界面"
 long_description = file: README.md
 long_description_content_type = "text/markdown"
 
+# 许可证
 license = {text = "MIT"}
 
+# 分类器
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
@@ -49,17 +40,30 @@ classifiers = [
     "Framework :: FastAPI",
     "Development Status :: 4 - Beta"
 ]
+
+# 项目链接
 urls = {
     "Homepage" = "https://github.com/Ricardo-shuo-liu/M2x",
     "Bug Tracker" = "https://github.com/Ricardo-shuo-liu/M2x/issues"
 }
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0.2",   
+    "build>=1.0.3",
+    "twine>=4.0.2"
+]
+
+
+[project.scripts]
+m2x = "m2x.clip:main"
+
+
 [tool.setuptools]
 packages = ["m2x"]
 include_package_data = true
 
-[tool.setuptools.package-data
-]
+[tool.setuptools.package-data] 
 m2x = [
     "static/**/*",
 ]
